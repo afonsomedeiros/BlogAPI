@@ -132,3 +132,4 @@ database.db
 fakedata.py
 Pipfile
 .vscode
+settings.*
