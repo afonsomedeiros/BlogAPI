@@ -1,9 +1,10 @@
 from peewee import DoesNotExist
+from jwt_bottle import BaseAuth
 
 from app.models import User
 
 
-class Auth(object):
+class Auth(BaseAuth):
 
     @staticmethod
     def authenticate(*args, **kwargs):
@@ -17,10 +18,10 @@ class Auth(object):
             return {"error": f"User {kwargs['email']} not exists."}
 
     @staticmethod
-    def get_user(obj_id: int):
+    def get_user(*args, **kwargs):
         try:
-            obj = User.get(User.id == obj_id)
+            obj = User.get(User.id == kwargs['id'])
             if obj:
                 return obj
         except DoesNotExist as err:
-            return {"error": f"User with id: {author_id} not exists."}
+            return {"error": f"User with id: {kwargs['id']} not exists."}
