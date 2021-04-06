@@ -23,17 +23,19 @@ def perfil(id):
 
 def List():
     page = int(request.query["page"]) if "page" in request.query else 1
-    per_page = int(request.query["per_page"]) if "per_page" in request.query else 10
+    per_page = int(request.query["per_page"]
+                   ) if "per_page" in request.query else 10
     if "status" in request.query:
         data = User.select().where(User.status == request.query["status"])
     else:
         data = User.select()
     obj, extra_fields = get_info(data, page, per_page)
-    users = UserSchema(exclude=["password"], many=True).dump(obj)
-    users.append(extra_fields)
     response.status = 200
     response.content_type = "Application/json"
-    return json.dumps(users)
+    return json.dumps({
+        'info': extra_fields,
+        'users': UserSchema(many=True).dump(obj)
+    })
 
 
 @auth_required
@@ -66,4 +68,3 @@ def put(user: User):
     obj.save()
     response.status = 200
     return UserSchema(exclude=["password"]).dump(obj)
-

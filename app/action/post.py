@@ -1,3 +1,4 @@
+from functools import partial
 from app.action.category import post
 from operator import truediv
 from bottle import request, response
@@ -19,7 +20,8 @@ def get_last_posts(escape: str, page: int = 1, per_page: int = 10):
 def get_by_subcategory(subcategory_id: int, page: int = 1, per_page: int = 10):
     """ Only with status 1. """
     data = Post.select().where(
-        (Post.subcategory == Subcategory.get_by_id(subcategory_id)) & (Post.status == 1)
+        (Post.subcategory == Subcategory.get_by_id(
+            subcategory_id)) & (Post.status == 1)
     )
     return get_info(data, page, per_page)
 
@@ -50,16 +52,16 @@ def List(t: str):
         "las": get_last_posts,
     }
     page = int(request.query["page"]) if "page" in request.query else 1
-    per_page = int(request.query["per_page"]) if "per_page" in request.query else 10
+    per_page = int(request.query["per_page"]
+                   ) if "per_page" in request.query else 10
     query = request.query["query"] if "query" in request.query else ""
     obj, extra_fields = func[t](query, page, per_page)
-    for i in range(0, len(obj)):
-        obj[i].author.password = ""
-    posts = PostSchema(many=True).dump(obj)
-    posts.append(extra_fields)
     response.status = 200
     response.content_type = "Application/json"
-    return json.dumps(posts)
+    return json.dumps({
+        'info': extra_fields,
+        'subcategories': PostSchema(many=True, partial=True).dump(obj)
+    })
 
 
 def get(post_id):
