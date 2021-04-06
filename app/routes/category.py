@@ -8,7 +8,7 @@ from app.action import category, subcategory
 
 def create_category_route(app: Bottle):
     app.get(
-        f"/{API_VERSION[-1]}/category",
+        f"/{API_VERSION[-1]}/categories",
         callback=category.List,
         name="List all categories, could receive 'is_active' route param.",
     )
@@ -34,7 +34,7 @@ def create_category_route(app: Bottle):
 
 def create_subcategory_route(app: Bottle):
     app.get(
-        f"/{API_VERSION[-1]}/subcategory",
+        f"/{API_VERSION[-1]}/subcategories",
         callback=subcategory.List,
         name="List all subcategories, could receive 'is_active' route param.",
     )

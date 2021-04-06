@@ -3,6 +3,7 @@ from peewee import TextField, CharField, BooleanField, IntegerField, ForeignKeyF
 from data.engine import TimeStampBaseModel
 from . import Subcategory, User
 
+
 class Post(TimeStampBaseModel):
     """
         status
@@ -14,7 +15,7 @@ class Post(TimeStampBaseModel):
     description = CharField(max_length=300, null=True)
     content = TextField()
     status = IntegerField(default=0)
-    image = CharField(max_length=300)
+    image = CharField(max_length=300, null=True)
     author = ForeignKeyField(User)
     subcategory = ForeignKeyField(Subcategory)
 
